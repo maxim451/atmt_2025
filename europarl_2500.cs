@@ -2239,7 +2239,6 @@ Mezinárodní veřejné mínění nás sleduje a hodnotí to, jak si evropská r
 Vyzval jsem pana Barrosa v jeho nepřítomnosti, aby zabezpečil úplné využití veškerých zdrojů, jimiž disponuje na základě svého ústavního postavení.
 Následující kroky je nutno podniknout okamžitě, a tím myslím skutečně okamžitě:
 · pružná aktivace Evropského fondu solidarity,
-· provedení čl.
 100 odst. 2 Smlouvy, kterým se poskytují dodatečné prostředky Společenství v případě přírodních katastrof,
 · účast Komise a Evropské agentury pro životní prostředí na přípravě návrhu strategického plánu na obnovu požárem zasažených oblastí,
 · přijetí programů třetího a čtvrtého podpůrného plánu Společenství na nápravu škod,
@@ -2439,7 +2438,6 @@ Pocházejí odtud tři z obětí požárů.
 Rozumím bolesti a zděšení, které vyjádřili mnozí poslanci, a jsem vděčný, že jste byli tak rozhodní a věcní.
 Doufám, že taková bude i Rada při řešení úloh nastolených Parlamentem a Komisí.
 Dostal jsem pět návrhů usnesení v souladu s čl. 103 odst.
-2 jednacího řádu.
 Rozprava je ukončena.
 Hlasování se bude konat v úterý.
 Písemná prohlášení (článek 142)

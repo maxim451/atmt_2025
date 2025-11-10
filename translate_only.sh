@@ -20,17 +20,17 @@ TGT_TOKENIZER="cz-en/tokenizers/en-bpe-8000.model"
 CKPT="cz-en/checkpoints/checkpoint_best.pt"
 
 
-INPUT="europarl_2500.cs"              # source (Czech)
-REF="europarl_2500.en"                 # reference (English)
-OUT="cz-en/outputs/europarl_2500.hyp"  # hypotheses will be written here
+#INPUT="europarl_2500.cs"              # source (Czech)
+#REF="europarl_2500.en"                 # reference (English)
+#OUT="cz-en/outputs/europarl_2500.hyp"  # hypotheses will be written here
 
-# TSV="news-commentary_2500.tsv"
-# mkdir -p cz-en/outputs
-# cut -f1 "$TSV" > cz-en/outputs/newscomm_2500.cs
-# cut -f2 "$TSV" > cz-en/outputs/newscomm_2500.en
-# INPUT="cz-en/outputs/newscomm_2500.cs"
-# REF="cz-en/outputs/newscomm_2500.en"
-# OUT="cz-en/outputs/newscomm_2500.hyp"
+TSV="news-commentary_2500.tsv"
+mkdir -p cz-en/outputs
+cut -f1 "$TSV" > cz-en/outputs/newscomm_2500.cs
+cut -f2 "$TSV" > cz-en/outputs/newscomm_2500.en
+INPUT="cz-en/outputs/newscomm_2500.cs"
+REF="cz-en/outputs/newscomm_2500.en"
+OUT="cz-en/outputs/newscomm_2500.hyp"
 
 mkdir -p "$(dirname "$OUT")"
 

@@ -1,6 +1,6 @@
 #!/usr/bin/bash -l
 #SBATCH --partition teaching
-#SBATCH --time=2:0:0
+#SBATCH --time=3:0:0
 #SBATCH --ntasks=1
 #SBATCH --mem=8GB
 #SBATCH --cpus-per-task=5
