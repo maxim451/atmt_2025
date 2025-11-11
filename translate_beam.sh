@@ -5,7 +5,7 @@
 #SBATCH --mem=8GB
 #SBATCH --cpus-per-task=5
 #SBATCH --gpus=1
-#SBATCH --output=out_translate_mqa.out
+#SBATCH --output=out_translate_beam.out
 
 # === ENVIRONMENT SETUP ===
 module load gpu
