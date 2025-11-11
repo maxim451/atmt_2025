@@ -183,27 +183,35 @@ class MultiHeadedAttention(nn.Module):
         self.dim_embed = dim_embed    # 512
         self.h = n_heads  # 8
         self.WQ = nn.Linear(dim_embed, dim_embed)
-        self.WK = nn.Linear(dim_embed, dim_embed)
-        self.WV = nn.Linear(dim_embed, dim_embed) 
-        self.linear = nn.Linear(dim_embed, dim_embed)
+        self.WK = nn.Linear(dim_embed, self.d_k)
+        self.WV = nn.Linear(dim_embed, self.d_k) 
+        self.out_linear = nn.Linear(self.h * self.d_k, dim_embed)
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, x_query, x_key, x_value, mask=None):
-        nbatch = x_query.size(0) # get batch size
+        B, Tq, _ = x_query.shape
+        Tk = x_key.shape[1]
+
         # 1) Linear projections to get the multi-head query, key and value tensors
         # x_query, x_key, x_value dimension: nbatch * seq_len * dim_embed
         # LHS query, key, value dimensions: nbatch * h * seq_len * d_k
-        query = self.WQ(x_query).view(nbatch, -1, self.h, self.d_k).transpose(1,2)
-        key   = self.WK(x_key).view(nbatch, -1, self.h, self.d_k).transpose(1,2)
-        value = self.WV(x_value).view(nbatch, -1, self.h, self.d_k).transpose(1,2)
+        query = self.WQ(x_query).view(B, Tq, self.h, self.d_k).transpose(1,2)
+        # same for all heads
+        key   = self.WK(x_key).unsqueeze(1).repeat(1, self.h, 1, 1)
+        value = self.WV(x_value).unsqueeze(1).repeat(1, self.h, 1, 1)
+
         # 2) Attention
         # scores has dimensions: nbatch * h * seq_len * seq_len
         scores = torch.matmul(query, key.transpose(-2, -1))/math.sqrt(self.d_k)
         # 3) Mask out padding tokens and future tokens
         if mask is not None:
-            mask.unsqueeze(dim=1)
+            if mask.dim() == 3:
+                mask = mask.unsqueeze(1)  # (B, 1, Tq, Tk)
+            elif mask.dim() == 2:
+                mask = mask.unsqueeze(1).unsqueeze(0)  # редкий случай (1,1,Tq,Tk)
+            mask = mask.bool()
+            scores = scores.masked_fill(mask, float("-inf"))
 
-            scores = scores.masked_fill(mask, float('-inf'))
         # p_atten dimensions: nbatch * h * seq_len * seq_len
         p_atten = torch.nn.functional.softmax(scores, dim=-1) # attention filter
         p_atten = self.dropout(p_atten)
@@ -214,8 +222,8 @@ class MultiHeadedAttention(nn.Module):
         # print("p_atten shape:", p_atten.shape)
         x = torch.matmul(p_atten, value)  # filtered values
         # x now has dimensions:nbatch * seq_len * dim_embed
-        x = x.transpose(1, 2).contiguous().view(nbatch, -1, self.dim_embed)
-        return self.linear(x) # final linear layer
+        x = x.transpose(1, 2).contiguous().view(B, Tq, self.h * self.d_k)
+        return self.out_linear(x) # final linear layer
 
 class ResidualConnection(nn.Module):
     def __init__(self, dim, dropout):

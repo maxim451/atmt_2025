@@ -13,7 +13,7 @@ from torch.serialization import default_restore_location
 import sys
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
-from seq2seq.decode import decode
+from seq2seq.decode import decode_beam_search
 from seq2seq.data.tokenizer import BPETokenizer
 from seq2seq import models, utils
 from seq2seq.data.dataset import Seq2SeqDataset, BatchSampler
@@ -44,6 +44,11 @@ def get_args():
     parser.add_argument('--bleu', action='store_true', help='If set, compute BLEU score after translation')
     parser.add_argument('--reference', type=str, help='Path to the reference file (one sentence per line, required if --bleu is set)')
     
+    parser.add_argument('--beam-search', action='store_true', help='Use beam search decoding instead of greedy decoding')
+    parser.add_argument('--beam-size', default=5, type=int, help='Beam size for beam search decoding')
+    parser.add_argument('--alpha', default=0.7, type=float, help='Length normalization parameter for beam search')
+
+
     return parser.parse_args()
 
 
@@ -144,13 +149,24 @@ def main(args):
 
             #-----------------------------------------
             # Decode without teacher forcing
-            prediction = decode(model=model,
-                                      src_tokens=src_tokens,
-                                      src_pad_mask=src_pad_mask,
-                                      max_out_len=args.max_len,
-                                      tgt_tokenizer=tgt_tokenizer,
-                                      args=args,
-                                      device=DEVICE)
+            if args.beam_search:
+                prediction = decode_beam_search(model=model,
+                                     src_tokens=src_tokens,
+                                     src_pad_mask=src_pad_mask,
+                                     max_out_len=args.max_len,
+                                     tgt_tokenizer=tgt_tokenizer,
+                                     args=args,
+                                     device=DEVICE,
+                                     beam_size=args.beam_size,
+                                     alpha=args.alpha)
+            else:
+                prediction = decode(model=model,
+                        src_tokens=src_tokens,
+                        src_pad_mask=src_pad_mask,
+                        max_out_len=args.max_len,
+                        tgt_tokenizer=tgt_tokenizer,
+                        args=args,
+                        device=DEVICE)  
             #----------------------------------------
 
         # Remove BOS and decode each sentence
@@ -160,7 +176,6 @@ def main(args):
             if args.output is not None:
                 with open(args.output, 'a', encoding="utf-8") as out_file:
                     out_file.write(translation.strip() + '\n')
-            
     #------------------------------------------
     
     logging.info(f'Wrote {len(translations)} lines to {args.output}')

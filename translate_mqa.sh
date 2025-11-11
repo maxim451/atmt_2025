@@ -5,7 +5,7 @@
 #SBATCH --mem=8GB
 #SBATCH --cpus-per-task=5
 #SBATCH --gpus=1
-#SBATCH --output=out_translate_test.out
+#SBATCH --output=out_translate_mqa.out
 
 # === ENVIRONMENT SETUP ===
 module load gpu
@@ -47,10 +47,14 @@ python translate.py \
     --reference cz-en/data/prepared/test_text.en \
     --src-tokenizer cz-en/tokenizers/cz-bpe-8000.model \
     --tgt-tokenizer cz-en/tokenizers/en-bpe-8000.model \
-    --checkpoint-path cz-en/checkpoints/checkpoint_best.pt \
-    --output cz-en/outputs/test_output.txt \
+    --checkpoint-path cz-en/checkpoints_mqa/checkpoint_best.pt \
+    --output cz-en/outputs/test_output_mqa.txt \
     --max-len 300 \
     --bleu
 
 echo "[INFO] Translation completed."
 date
+~                                                                                                                                                                                                           
+~                                                                                                                                                                                                           
+~                                                                                                                                                                                                           
+~          

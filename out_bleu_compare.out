@@ -1,0 +1,24 @@
+
+Filesystems usage for user maemel ( uid 646320632 ):
+-------------------------------------------------------------------------------------
+Directory                       Used   Limit   Used,%         Files     Limit
+-------------------------------------------------------------------------------------
+/home/maemel                    51KB    15GB     0.0%            35    100000
+/data/maemel                    14GB   200GB     6.7%         40393          
+/scratch/maemel                   0B    20TB     0.0%             1          
+
+/shares/atomt.pilot.s3it.uzh    31GB    10TB     0.3%          2935          
+-------------------------------------------------------------------------------------
+
+Files on /scratch may be purged after 30 days.
+See https://docs.s3it.uzh.ch/cluster/data
+
+[INFO] Starting BLEU comparison...
+Tue Nov 11 11:27:46 CET 2025
+[INFO] Reference lines: 7755
+[WARN] Baseline output not found at cz-en/outputs/test_output_baseline_trimmed.txt, skipping.
+MQA          | Lines:  7755 | BLEU:  0.016
+[WARN] Beam Search output not found at cz-en/outputs/test_output_mqa_beam5_trimmed.txt, skipping.
+
+[INFO] BLEU comparison completed.
+Tue Nov 11 11:29:49 CET 2025

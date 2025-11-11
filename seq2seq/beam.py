@@ -25,7 +25,8 @@ class BeamSearch(object):
         """ Adds a beam search path that ended in EOS (= finished sentence) """
         # ensure all node paths have the same length for batch ops
         missing = self.max_len - node.length
-        node.sequence = torch.cat((node.sequence.cpu(), torch.tensor([self.pad]*missing).long()))
+        pad_tensor = torch.full((1, missing), self.pad, dtype=torch.long)
+        node.sequence = torch.cat((node.sequence.cpu(), pad_tensor), dim=1)
         self.final.put((score, next(self._counter), node))
 
     def get_current_beams(self):

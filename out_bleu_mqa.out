@@ -1,0 +1,21 @@
+
+Filesystems usage for user maemel ( uid 646320632 ):
+-------------------------------------------------------------------------------------
+Directory                       Used   Limit   Used,%         Files     Limit
+-------------------------------------------------------------------------------------
+/home/maemel                    51KB    15GB     0.0%            35    100000
+/data/maemel                    14GB   200GB     6.7%         40376          
+/scratch/maemel                   0B    20TB     0.0%             1          
+
+/shares/atomt.pilot.s3it.uzh    31GB    10TB     0.3%          2935          
+-------------------------------------------------------------------------------------
+
+Files on /scratch may be purged after 30 days.
+See https://docs.s3it.uzh.ch/cluster/data
+
+[INFO] Starting BLEU evaluation...
+Tue Nov 11 08:39:23 CET 2025
+[INFO] Computing BLEU for trimmed MQA output...
+Final Test Set Results: BLEU 0.016
+[INFO] BLEU evaluation completed.
+Tue Nov 11 08:40:17 CET 2025
