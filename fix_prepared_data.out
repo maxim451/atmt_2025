@@ -1,0 +1,35 @@
+
+Filesystems usage for user maemel ( uid 646320632 ):
+-------------------------------------------------------------------------------------
+Directory                       Used   Limit   Used,%         Files     Limit
+-------------------------------------------------------------------------------------
+/home/maemel                    32KB    15GB     0.0%            35    100000
+/data/maemel                    14GB   200GB     6.5%         40318          
+/scratch/maemel                   0B    20TB     0.0%             1          
+
+/shares/atomt.pilot.s3it.uzh   1.4GB    10TB     0.0%            13          
+-------------------------------------------------------------------------------------
+
+Files on /scratch may be purged after 30 days.
+See https://docs.s3it.uzh.ch/cluster/data
+
+[INFO] Удаляем повреждённые файлы...
+[INFO] Запускаем препроцессинг...
+INFO:root:Loaded SentencePiece model for cz from ./cz-en/tokenizers/cz-bpe-8000.model
+INFO:root:Loaded SentencePiece model for en from ./cz-en/tokenizers/en-bpe-8000.model
+INFO:root:File ./cz-en/data/prepared/train.cz already exists, skipping...
+INFO:root:File ./cz-en/data/prepared/valid.cz already exists, skipping...
+INFO:root:Built a binary dataset for /home/maemel/shares/cz-en/data/raw/test.cz: 5000 sentences, 78588 tokens, 0.103% replaced by unknown token
+INFO:root:File ./cz-en/data/prepared/train.en already exists, skipping...
+INFO:root:File ./cz-en/data/prepared/valid.en already exists, skipping...
+INFO:root:Built a binary dataset for /home/maemel/shares/cz-en/data/raw/test.en: 5000 sentences, 75212 tokens, 0.073% replaced by unknown token
+INFO:root:Data processing complete!
+Vocabulary saved to cz-en/tokenizers/cz-bpe-8000.vocab
+Vocabulary saved to cz-en/tokenizers/en-bpe-8000.vocab
+[INFO] Проверяем файлы...
+cz-en/data/prepared/test.cz: data
+cz-en/data/prepared/test.en: data
+[INFO] Размеры файлов:
+-rw-rw-r-- 1 maemel maemel 455K Oct 11 04:07 cz-en/data/prepared/test.cz
+-rw-rw-r-- 1 maemel maemel 441K Oct 11 04:07 cz-en/data/prepared/test.en
+[DONE] Проверка завершена
