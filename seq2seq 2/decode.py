@@ -11,11 +11,11 @@ def decode(model: Seq2SeqModel, src_tokens: torch.Tensor, src_pad_mask: torch.Te
     PAD = tgt_tokenizer.pad_id()
     generated = torch.full((batch_size, 1), BOS, dtype=torch.long, device=device)
     finished = torch.zeros(batch_size, dtype=torch.bool, device=device)
+    max_decoder_len = model.decoder.pos_embed.size(1) # loop problem
     for t in range(max_out_len):
         # Create target padding mask with correct batch dimension
-        max_len = model.decoder.pos_embed.size(1)
-        if generated.size(1) > max_len:
-            generated = generated[:, :max_len]
+        if generated.size(1) > max_decoder_len:
+            generated = generated[:, :max_decoder_len]
         # Ensure trg_pad_mask has shape (batch_size, seq_len)
         trg_pad_mask = (generated == PAD).unsqueeze(1).unsqueeze(2)  # (batch_size, 1, 1, seq_len)
         # Forward pass: use only the generated tokens so far
@@ -47,6 +47,7 @@ def beam_search_decode(model: Seq2SeqModel, src_tokens: torch.Tensor, src_pad_ma
     BOS, EOS, PAD = tgt_tokenizer.bos_id(), tgt_tokenizer.eos_id(), tgt_tokenizer.pad_id()
     # __QUESTION 1: what does this line set up and why is the beam represented this way?
     beams = [(torch.tensor([[BOS]], device=device), 0.0)]
+    max_decoder_len = model.decoder.pos_embed.size(1)
     for _ in range(max_out_len):
         new_beams = []
         for seq, score in beams:
@@ -54,9 +55,8 @@ def beam_search_decode(model: Seq2SeqModel, src_tokens: torch.Tensor, src_pad_ma
                 new_beams.append((seq, score))
                 continue
             with torch.no_grad():
-                max_len = model.decoder.pos_embed.size(1)
-                if seq.size(1) > max_len:
-                    seq = seq[:, :max_len]
+                if seq.size(1) > max_decoder_len:
+                    seq = seq[:, :max_decoder_len]
                 # __QUESTION 2: Why do we need to create trg_pad_mask here and how does it affect the model's predictions?
                 trg_pad_mask = (seq == PAD)[:, None, None, :]
                 logits = model(src_tokens, src_pad_mask, seq, trg_pad_mask)[:, -1, :]
@@ -67,7 +67,9 @@ def beam_search_decode(model: Seq2SeqModel, src_tokens: torch.Tensor, src_pad_ma
             for k in range(beam_size):
                 # __QUESTION 4: explain the tensor shapes and the logic when creating new_seq and new_score below. Is any broadcasting or indexing issue possible?
                 new_seq = torch.cat([seq, topk_ids[:, k].unsqueeze(0)], dim=1)
-                new_score = score + topk_log_probs[:, k].item()
+                length = new_seq.size(1)
+                score_norm = ((5 + length)**args.alpha) / (6**args.alpha)
+                new_score = (score + topk_log_probs[:, k].item()) / score_norm
                 new_beams.append((new_seq, new_score))
 
         beams = sorted(new_beams, key=lambda x: x[1], reverse=True)[:beam_size]
